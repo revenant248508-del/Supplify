@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Star, ShoppingBag, ArrowRight, Loader2 } from 'lucide-react';
-import { generateMockProducts, MockProduct } from '../services/geminiService';
+import { generateMockProducts, MockProduct } from '../services/geminiService.ts';
 
 const DemoSearch: React.FC = () => {
   const [query, setQuery] = useState('');

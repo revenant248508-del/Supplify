@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import DemoSearch from './components/DemoSearch';
-import Features from './components/Features';
-import Pricing from './components/Pricing';
-import Footer from './components/Footer';
+import Header from './components/Header.tsx';
+import Hero from './components/Hero.tsx';
+import DemoSearch from './components/DemoSearch.tsx';
+import Features from './components/Features.tsx';
+import Pricing from './components/Pricing.tsx';
+import Footer from './components/Footer.tsx';
 
 function App() {
   return (
