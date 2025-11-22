@@ -1,7 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export interface MockProduct {
   name: string;
   storeName: string;
@@ -11,13 +9,45 @@ export interface MockProduct {
   tags: string[];
 }
 
-export const generateMockProducts = async (query: string): Promise<MockProduct[]> => {
-  if (!process.env.API_KEY) {
-    console.warn("No API Key found for Gemini");
-    return fallbackProducts;
+const fallbackProducts: MockProduct[] = [
+  {
+    name: "Yellow Pad (Whole)",
+    storeName: "Kuya Ben's School Supplies",
+    price: "₱45.00",
+    rating: 4.8,
+    description: "Standard yellow pad for quizzes. Bulk discounts available.",
+    tags: ["Stationery", "Essentials"]
+  },
+  {
+    name: "Scientific Calculator (Casio fx-991ES)",
+    storeName: "CMU Multipurpose Coop",
+    price: "₱1,250.00",
+    rating: 4.9,
+    description: "Board exam approved. Essential for Engineering students.",
+    tags: ["Tech", "Essentials"]
+  },
+  {
+    name: "0.5 Gel Pen (Black)",
+    storeName: "Ate Len's Sari-Sari",
+    price: "₱15.00",
+    rating: 4.5,
+    description: "Smooth writing, doesn't smudge. Perfect for long exams.",
+    tags: ["Accessories", "Writing"]
   }
+];
 
+export const generateMockProducts = async (query: string): Promise<MockProduct[]> => {
   try {
+    // Check for API key safely to prevent crash in static environments
+    const apiKey = typeof process !== "undefined" ? process.env.API_KEY : undefined;
+
+    if (!apiKey) {
+      console.warn("No API Key found for Gemini");
+      return fallbackProducts;
+    }
+
+    const ai = new GoogleGenAI({ apiKey: apiKey });
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Generate 3 realistic product listings for a local university marketplace called 'Supplify' in the Philippines (CMU ecosystem) based on the search query: "${query}". 
@@ -53,30 +83,3 @@ export const generateMockProducts = async (query: string): Promise<MockProduct[]
     return fallbackProducts;
   }
 };
-
-const fallbackProducts: MockProduct[] = [
-  {
-    name: "Yellow Pad (Whole)",
-    storeName: "Kuya Ben's School Supplies",
-    price: "₱45.00",
-    rating: 4.8,
-    description: "Standard yellow pad for quizzes. Bulk discounts available.",
-    tags: ["Stationery", "Essentials"]
-  },
-  {
-    name: "Scientific Calculator (Casio fx-991ES)",
-    storeName: "CMU Multipurpose Coop",
-    price: "₱1,250.00",
-    rating: 4.9,
-    description: "Board exam approved. Essential for Engineering students.",
-    tags: ["Tech", "Essentials"]
-  },
-  {
-    name: "0.5 Gel Pen (Black)",
-    storeName: "Ate Len's Sari-Sari",
-    price: "₱15.00",
-    rating: 4.5,
-    description: "Smooth writing, doesn't smudge. Perfect for long exams.",
-    tags: ["Accessories", "Writing"]
-  }
-];
